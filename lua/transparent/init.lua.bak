@@ -5,7 +5,6 @@ local augroup = vim.api.nvim_create_augroup("Transparent", { clear = true })
 local default = {
 	auto = true,
 	groups = {
-		-- Standard syntax groups
 		"Normal",
 		"Comment",
 		"Constant",
@@ -22,35 +21,25 @@ local default = {
 		"Repeat",
 		"Operator",
 		"Structure",
-
-		-- UI elements
 		"LineNr",
 		"NonText",
 		"SignColumn",
-		"CursorLine",
 		"CursorLineNr",
 		"EndOfBuffer",
 		"VertSplit",
-		"NormalNC",
-
-		-- Floating/popup windows
-		"NormalFloat",
-		"FloatBorder",
+		"CursorLine",
+		"CursorLineNr",
 		"Pmenu",
-		"PmenuSel",
-		"PmenuSbar",
-		"PmenuThumb",
-
-		-- Plugin-specific
+		"NormalFloat",
 		"LazyNormal",
 		"LazyBorder",
 		"TelescopeNormal",
 		"NvimTreeNormal",
+		"NormalNC",
 	},
 	extra_groups = {},
 	excludes = {},
 }
-
 M.configs = vim.tbl_deep_extend("force", default, {})
 M.state = {
 	enabled = true,
@@ -67,37 +56,24 @@ local considerable = function(name)
 		return true
 	end
 
-	-- Fallback: include any group with "Lazy" or "Normal" in the name
-	if name:match("Lazy") or name:match("Normal") then
-		return true
-	end
-
 	return false
 end
 
-local clear_backgrounds = function()
+clear_backgrounds = function()
 	if M.state.enabled == false then
 		return
 	end
 
 	for name, attrs in pairs(vim.api.nvim_get_hl(0, {})) do
 		if considerable(name) and (attrs.bg or attrs.ctermbg) then
-			local new_attr = vim.tbl_extend("force", attrs, {
+			new_attr = vim.tbl_extend("force", attrs, {
 				bg = "NONE",
 				ctermbg = "NONE",
 			})
 			vim.api.nvim_set_hl(0, name, new_attr)
 		end
 	end
-
-	-- Redraw Lazy UI if it's loaded
-	vim.schedule(function()
-		if package.loaded["lazy.view"] then
-			require("lazy.view"):redraw()
-		end
-	end)
 end
-
 M.clear_backgrounds = clear_backgrounds
 
 M.enable = function()
@@ -126,11 +102,11 @@ end
 
 M.setup = function(opt)
 	M.configs = vim.tbl_deep_extend("force", default, opt or {})
-
 	if M.configs.auto == false then
 		return
 	end
 
+	-- Run on VimEnter, ColorScheme
 	vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
 		group = augroup,
 		desc = "Clear background colors",
