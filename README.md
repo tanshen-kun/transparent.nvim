@@ -22,7 +22,7 @@ Without vim-transparent
 
 # Fix : (LazyUI)
 
-<p>The Lazy UI and other parts were not working with original <code>transparent.nvim</code> configs, which are now working.</p>
+<p>The Lazy UI and a few other parts were not working with original <code>transparent.nvim</code> configs, but they are now fixed.</p>
 
 <p align=center>
 <img width="1367" height="769" alt="screenshot_1760491673" src="https://github.com/user-attachments/assets/5cf56adb-db77-4ed5-9a63-97c0a55ba758" />
